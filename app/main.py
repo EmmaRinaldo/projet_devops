@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from app.models import Book
 from app.database import books
 
+
 app = FastAPI()
 
 @app.get("/")
