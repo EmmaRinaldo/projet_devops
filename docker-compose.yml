@@ -66,8 +66,6 @@ services:
       - monitoring_net
     restart: unless-stopped
 
-
-
 networks:
   monitoring_net:
     driver: bridge
@@ -76,3 +74,4 @@ networks:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+
