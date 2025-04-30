@@ -1,4 +1,4 @@
-name: CI - Test & Coverage
+name: CI - Test, Coverage & Docker Test
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
     branches: [ develop ]
 
 jobs:
-  test:
+  test_and_build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout du code
       uses: actions/checkout@v4
 
-    - name: Installer Python
+    - name: Installer Python 
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
@@ -23,18 +23,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest pytest-cov
-        pip install httpx
+        pip install pytest pytest-cov httpx
 
     - name: Lancer les tests avec couverture
       run: |
-        pytest --cov=app --cov-report=term-missing
+        pytest --cov=app --cov-report=term-missing tests/
 
     - name: Enregistrer le rapport de couverture
       uses: actions/upload-artifact@v4
       with:
-        name: couverture-tests
+        name: couverture-tests-hote
         path: .coverage
-    - name: Run tests
+
+    - name: Construire l'image Docker
       run: |
-        docker run --rm bookreview-api pytest
+        docker build -t bookreview-api .
+
+    - name: Lancer les tests (dans Docker)
+      run: |
+        docker run --rm bookreview-api pytest tests
