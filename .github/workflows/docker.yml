@@ -33,3 +33,6 @@ jobs:
         docker run -d -p 8000:8000 --name bookreview bookreview-api
         sleep 5
         curl --fail http://localhost:8000/docs
+    - name: Run tests
+      run: |
+        docker run --rm bookreview-api pytest

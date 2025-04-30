@@ -35,3 +35,6 @@ jobs:
       with:
         name: couverture-tests
         path: .coverage
+    - name: Run tests
+      run: |
+        docker run --rm bookreview-api pytest
