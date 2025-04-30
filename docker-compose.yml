@@ -1,6 +1,7 @@
 services:
   api:
     build: .
+    container_name: bookreview-api
     ports:
       - "8000:8000"
     volumes:
@@ -8,19 +9,46 @@ services:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - monitoring_net
+    restart: unless-stopped
 
   prometheus:
-    image: prom/prometheus:v2.49.1
+    image: prom/prometheus:latest
+    container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
     ports:
       - "9090:9090"
     networks:
       - monitoring_net
     restart: unless-stopped
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring_net
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 networks:
   monitoring_net:
     driver: bridge
+    name: monitoring_net
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
