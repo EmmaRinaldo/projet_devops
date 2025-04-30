@@ -35,4 +35,4 @@ jobs:
         curl --fail http://localhost:8000/docs
     - name: Run tests
       run: |
-        docker run --rm bookreview-api pytest
+        docker run --rm -w /app bookreview-api pytest tests --maxfail=1 --disable-warnings --tb=short
