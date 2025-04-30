@@ -2,7 +2,7 @@ name: CI - Docker Build
 
 on:
   push:
-    branches: [develop] 
+    branches: [develop]
   pull_request:
     branches: [develop]
 
