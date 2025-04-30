@@ -6,6 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./app /app/app
+COPY ./tests /app/tests
 
 RUN adduser --disabled-password --gecos "" appuser
 RUN chown -R appuser:appuser /app
