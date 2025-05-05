@@ -65,7 +65,6 @@ services:
     networks:
       - monitoring_net
     restart: unless-stopped
-
 networks:
   monitoring_net:
     driver: bridge
